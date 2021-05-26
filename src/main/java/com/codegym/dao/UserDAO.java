@@ -1,11 +1,7 @@
 package com.codegym.dao;
 import com.codegym.model.User;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 public class UserDAO implements IUserDAO{
@@ -68,6 +64,8 @@ public class UserDAO implements IUserDAO{
 
             // Step 4: Process the ResultSet object.
             while (rs.next()) {
+
+
                 String name = rs.getString("name");
                 String email = rs.getString("email");
                 String country = rs.getString("country");
@@ -117,7 +115,8 @@ public class UserDAO implements IUserDAO{
 
     public boolean updateUser(User user) throws SQLException {
         boolean rowUpdated;
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(UPDATE_USERS_SQL);) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_USERS_SQL);) {
             statement.setString(1, user.getName());
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getCountry());
@@ -183,5 +182,75 @@ public class UserDAO implements IUserDAO{
             }
         });
         return userList;
+    }
+    public User getUserById(int id) {
+
+        User user = null;
+
+        String query = "{CALL get_user_by_id(?)}";
+
+        // Step 1: Establishing a Connection
+
+        try (Connection connection = getConnection();
+
+             // Step 2:Create a statement using connection object
+
+             CallableStatement callableStatement = connection.prepareCall(query)) {
+
+            callableStatement.setInt(1, id);
+
+            // Step 3: Execute the query or update query
+
+            ResultSet rs = callableStatement.executeQuery();
+
+            // Step 4: Process the ResultSet object.
+
+            while (rs.next()) {
+
+                String name = rs.getString("name");
+
+                String email = rs.getString("email");
+
+                String country = rs.getString("country");
+
+                user = new User(id, name, email, country);
+
+            }
+
+        } catch (SQLException e) {
+
+            printSQLException(e);
+
+        }
+
+        return user;
+
+    }
+    public void insertUserStore(User user) throws SQLException {
+
+        String query = "{CALL insert_user(?,?,?)}";
+
+        // try-with-resource statement will auto close the connection.
+
+        try (Connection connection = getConnection();
+
+             CallableStatement callableStatement = connection.prepareCall(query);) {
+
+            callableStatement.setString(1, user.getName());
+
+            callableStatement.setString(2, user.getEmail());
+
+            callableStatement.setString(3, user.getCountry());
+
+            System.out.println(callableStatement);
+
+            callableStatement.executeUpdate();
+
+        } catch (SQLException e) {
+
+            printSQLException(e);
+
+        }
+
     }
 }

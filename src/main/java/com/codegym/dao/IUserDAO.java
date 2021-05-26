@@ -19,4 +19,7 @@ public interface IUserDAO {
     List<User> findUsersByCountry(String country);
     public List<User> softByName(List<User> userList);
     public List<User> softByCountry(List<User> userList);
+    User getUserById(int id);
+
+    void insertUserStore(User user) throws SQLException;
 }

@@ -80,8 +80,7 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    private void listUser(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException, ServletException {
+    private void listUser(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
         List<User> listUser = userDAO.selectAllUsers();
         request.setAttribute("listUser", listUser);
         RequestDispatcher dispatcher = request.getRequestDispatcher("user/list.jsp");
@@ -110,6 +109,8 @@ public class UserServlet extends HttpServlet {
     private void showEditForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
+//   2 cách 1 cách gọi store 1 cách truyền lệnh sql
+//   User existingUser = userDAO.getUserById(i
         User existingUser = userDAO.selectUser(id);
         RequestDispatcher dispatcher = request.getRequestDispatcher("user/edit.jsp");
         request.setAttribute("user", existingUser);
@@ -136,6 +137,7 @@ public class UserServlet extends HttpServlet {
         String country = request.getParameter("country");
         User newUser = new User(name, email, country);
         userDAO.insertUser(newUser);
+//  2 cách      userDAO.insertUserStore(newUser);
         RequestDispatcher dispatcher = request.getRequestDispatcher("user/create.jsp");
         dispatcher.forward(request, response);
     }
