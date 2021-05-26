@@ -21,7 +21,10 @@ public interface IUserDAO {
     public List<User> softByCountry(List<User> userList);
     User getUserById(int id);
 
+
+    //đoạn này toàn test thêm ko liên quan đến vận hành của bài user này
     void insertUserStore(User user) throws SQLException;
     void addUserTransaction(User user, int[] permision);
     public void insertUpdateWithoutTransaction();
+    public void insertUpdateUseTransaction();
 }

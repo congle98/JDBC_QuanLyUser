@@ -45,9 +45,15 @@ public class UserServlet extends HttpServlet {
                     break;
                 case "permision":
                     addUserPermision(request, response);
+                    //đây là tính năng test transaction thôi ko ảnh hưởng đến bài này đâu
                     break;
                 case "test-without-tran":
                     testWithoutTran(request, response);
+                    //đây là tính năng test không có  transaction thôi ko ảnh hưởng đến bài này đâu
+                    break;
+                case "test-use-tran":
+                    //đây là tính năng test transaction thôi ko ảnh hưởng đến bài này đâu
+                    testUseTran(request, response);
                     break;
                 default:
                     listUser(request, response);
@@ -182,6 +188,11 @@ public class UserServlet extends HttpServlet {
     private void testWithoutTran(HttpServletRequest request, HttpServletResponse response) {
 
         userDAO.insertUpdateWithoutTransaction();
+
+    }
+    private void testUseTran(HttpServletRequest request, HttpServletResponse response) {
+
+        userDAO.insertUpdateUseTransaction();
 
     }
 
